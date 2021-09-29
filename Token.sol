@@ -108,7 +108,7 @@ contract TokenZ is BEP20Token {
   function setLock(address wallet, uint256 amount, uint256 start, uint256 end) external onlyOwner {
     _locks[wallet].amount = amount;
     _locks[wallet].end    = end;
-    _locks[wallet].start   = start;
+    _locks[wallet].start  = start;
     emit setLockEvent( wallet, amount, start, end);
   }
 
@@ -147,9 +147,9 @@ contract TokenZ is BEP20Token {
       uint256 amountGrowth    = (amount * _fee.growth    * 100) / 10000;
       uint256 amountFundation = (amount * _fee.fundation * 100) / 10000;
       amountFree = amount - amountHolders - amountOperation - amountGrowth - amountFundation;
-      _balances[_wallet.holders] += amountHolders;
+      _balances[_wallet.holders]   += amountHolders;
       _balances[_wallet.operation] += amountOperation;
-      _balances[_wallet.growth] += amountGrowth;
+      _balances[_wallet.growth]    += amountGrowth;
       _balances[_wallet.fundation] += amountFundation;
     }
 
