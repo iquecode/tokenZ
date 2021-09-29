@@ -41,15 +41,21 @@ contract TokenZ is BEP20Token {
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
 
-    _wallet.holders   = 0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC;
-    _wallet.operation = 0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB;
-    _wallet.growth    = 0x583031D1113aD414F02576BD6afaBfb302140225;
-    _wallet.fundation = 0xdD870fA1b7C4700F2BD7f44238821C26f7392148;   
+    _wallet.holders   = 0xA75b3ad1550ae0D1e0416D59a2Da7022C8DF21A7;
+    _wallet.operation = 0xc95FeBe584157FC99C29bB13E9c2ff5cD480D2be;
+    _wallet.growth    = 0xDf052e61A674d75677D602a871EB947e5A086dE3;
+    _wallet.fundation = 0x68E4e2eCc40dce3eaa5EdE1c6F0e50a54005F942;   
 
     _fee.holders   = 3;
     _fee.operation = 2;
     _fee.growth    = 2;
     _fee.fundation = 1;
+
+    _noFee[msg.sender]        = true;
+    _noFee[_wallet.holders]   = true;
+    _noFee[_wallet.operation] = true;
+    _noFee[_wallet.growth]    = true;
+    _noFee[_wallet.fundation] = true;
 
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
