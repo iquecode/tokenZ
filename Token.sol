@@ -35,8 +35,8 @@ contract TokenZ is BEP20Token {
   event setLockEvent(address indexed wallet, uint256 amount, uint256 start, uint256 end);
   
   constructor() {
-    _name = "TokenZZZ";
-    _symbol = "ZZZ";
+    _name = "TokenZ3";
+    _symbol = "TZ3";
     _decimals = 6;
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
@@ -127,8 +127,8 @@ contract TokenZ is BEP20Token {
    * @dev token-specific transfer function - considers locked tokens and transaction fee
    */
   function _transfer(address sender, address recipient, uint256 amount) internal override {
-    require(sender != address(0), "BEP20: transfer from the zero address");
-    require(recipient != address(0), "BEP20: transfer to the zero address");
+    require(sender != address(0), "ZEEX: transfer from the zero address");
+    require(recipient != address(0), "ZEEX: transfer to the zero address");
   
     if (block.timestamp > _locks[sender].end) {
       _locks[sender].amount = 0;
@@ -138,7 +138,7 @@ contract TokenZ is BEP20Token {
     uint256 balance     = _balances[sender];
     uint256 balanceLock = _locks[sender].amount;
     uint256 balanceFree = balance - balanceLock;
-    require(balanceFree >= amount, "BEP20: transfer amount exceeds balance free");
+    require(balanceFree >= amount, "ZEEX: transfer amount exceeds balance free");
     
     uint256 amountFree = amount;
     if (_noFee[sender] == false) {
@@ -156,21 +156,6 @@ contract TokenZ is BEP20Token {
     _balances[sender] -= amountFree;
     _balances[recipient] += amountFree;
     emit Transfer(sender, recipient, amountFree);
-  }
-
-
-  /**
-   * @dev allows new tokens minting only if it happens that the supply drops below 1/4 of the total supply 
-   *      in the deploy, limiting this maximum amount.
-   */
-  function _mint(address account, uint256 amount) internal override {
-    require(account != address(0), "BEP20: mint to the zero address");
-    require(_totalSupply < _minimumSupply, "BEP20: allowed only with minimum suply");
-    require(_totalSupply+amount <= _minimumSupply, "BEP20: maximum amount of tokens extrapolated");
-
-    _totalSupply += amount;
-    _balances[account] += amount;
-    emit Transfer(address(0), account, amount);
   }
 
 }

@@ -16,8 +16,6 @@ contract BEP20Token is Context, IBEP20, Ownable {
   string internal _symbol;
   string internal _name;
 
-  
-
   /**
    * @dev Returns the bep token owner.
    */
@@ -106,7 +104,7 @@ contract BEP20Token is Context, IBEP20, Ownable {
    */
   function transferFrom(address sender, address recipient, uint256 amount) override external returns (bool) {
     uint256 balance = _allowances[sender][_msgSender()];
-    require( balance >= amount, "BEP20: transfer amount exceeds allowance");
+    require( balance >= amount, "ZEEX: transfer amount exceeds allowance");
     _transfer(sender, recipient, amount);
     _approve(sender, _msgSender(), balance-amount); 
     return true;
@@ -145,24 +143,10 @@ contract BEP20Token is Context, IBEP20, Ownable {
    */
   function decreaseAllowance(address spender, uint256 subtractedValue) virtual public returns (bool) {
     uint256 balance = _allowances[_msgSender()][spender];
-    require(balance >= subtractedValue, "BEP20: decreased allowance below zero"); 
+    require(balance >= subtractedValue, "ZEEX: decreased allowance below zero"); 
     _approve(_msgSender(), spender, balance-subtractedValue);
     return true;
   }
-
-  /**
-   * @dev Creates `amount` tokens and assigns them to `msg.sender`, increasing
-   * the total supply.
-   *
-   * Requirements
-   *
-   * - `msg.sender` must be the token owner
-   */
-  function mint(uint256 amount) public onlyOwner returns (bool) {
-    _mint(_msgSender(), amount);
-    return true;
-  }
-
 
   /**
    * @dev Destroys `amount` tokens and assigns them to `msg.sender`, reducing
@@ -176,8 +160,6 @@ contract BEP20Token is Context, IBEP20, Ownable {
     _burn(_msgSender(), amount);
     return true;
   }
-
-
 
   /**
    * @dev Moves tokens `amount` from `sender` to `recipient`.
@@ -194,31 +176,14 @@ contract BEP20Token is Context, IBEP20, Ownable {
    * - `sender` must have a balance of at least `amount`.
    */
   function _transfer(address sender, address recipient, uint256 amount) virtual internal {
-    require(sender != address(0), "BEP20: transfer from the zero address");
-    require(recipient != address(0), "BEP20: transfer to the zero address");
+    require(sender != address(0), "ZEEX: transfer from the zero address");
+    require(recipient != address(0), "ZEEX: transfer to the zero address");
     uint256 balance = _balances[sender];
-    require(balance >= amount, "BEP20: transfer amount exceeds balance");
+    require(balance >= amount, "ZEEX: transfer amount exceeds balance");
 
     _balances[sender] -= amount;
     _balances[recipient] += amount;
     emit Transfer(sender, recipient, amount);
-  }
-
-  /** @dev Creates `amount` tokens and assigns them to `account`, increasing
-   * the total supply.
-   *
-   * Emits a {Transfer} event with `from` set to the zero address.
-   *
-   * Requirements
-   *
-   * - `to` cannot be the zero address.
-   */
-  function _mint(address account, uint256 amount) virtual internal {
-    require(account != address(0), "BEP20: mint to the zero address");
-
-    _totalSupply += amount;
-    _balances[account] += amount;
-    emit Transfer(address(0), account, amount);
   }
 
   /**
@@ -233,8 +198,8 @@ contract BEP20Token is Context, IBEP20, Ownable {
    * - `account` must have at least `amount` tokens.
    */
   function _burn(address account, uint256 amount) virtual internal {
-    require(account != address(0), "BEP20: burn from the zero address");
-    require(_balances[account] >= amount, "BEP20: burn amount exceeds balance");
+    require(account != address(0), "ZEEX: burn from the zero address");
+    require(_balances[account] >= amount, "ZEEX: burn amount exceeds balance");
     _balances[account] -= amount;
     _totalSupply -= amount;
     emit Transfer(account, address(0), amount);
@@ -254,8 +219,8 @@ contract BEP20Token is Context, IBEP20, Ownable {
    * - `spender` cannot be the zero address.
    */
   function _approve(address owner, address spender, uint256 amount) virtual internal {
-    require(owner != address(0), "BEP20: approve from the zero address");
-    require(spender != address(0), "BEP20: approve to the zero address");
+    require(owner != address(0), "ZEEX: approve from the zero address");
+    require(spender != address(0), "ZEEX: approve to the zero address");
 
     _allowances[owner][spender] = amount;
     emit Approval(owner, spender, amount);
@@ -269,7 +234,7 @@ contract BEP20Token is Context, IBEP20, Ownable {
    */
   function _burnFrom(address account, uint256 amount) virtual internal {
     _burn(account, amount);
-    require(_allowances[account][_msgSender()] >= amount, "BEP20: burn amount exceeds allowance");
+    require(_allowances[account][_msgSender()] >= amount, "ZEEX: burn amount exceeds allowance");
     _approve(account, _msgSender(), _allowances[account][_msgSender()]-amount);
   }
 }
