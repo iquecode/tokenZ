@@ -5,13 +5,11 @@ import "./BEP20Token.sol";
 
 contract TokenZ is BEP20Token {
 
-  struct Wallet {
-    address holders;
-    address operation;
-    address growth;
-    address fundation;
-  }
-  Wallet internal _wallet; 
+
+  address internal WalletHolders   = 0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC;
+  address internal WalletOperation = 0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB;
+  address internal WalletGrowth    = 0x583031D1113aD414F02576BD6afaBfb302140225;
+  address internal WalletFundation = 0xdD870fA1b7C4700F2BD7f44238821C26f7392148;   
 
   struct Fee {
     uint256 holders;
@@ -19,7 +17,6 @@ contract TokenZ is BEP20Token {
     uint256 growth;
     uint256 fundation; 
   }
-  Fee internal _fee;
 
   struct Lock {
     uint256 amount;
@@ -39,15 +36,11 @@ contract TokenZ is BEP20Token {
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
 
-    _wallet.holders   = 0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC;
-    _wallet.operation = 0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB;
-    _wallet.growth    = 0x583031D1113aD414F02576BD6afaBfb302140225;
-    _wallet.fundation = 0xdD870fA1b7C4700F2BD7f44238821C26f7392148;   
 
-    _fee.holders   = 3;
-    _fee.operation = 2;
-    _fee.growth    = 2;
-    _fee.fundation = 1;
+    Fee.holders   = 3;
+    Fee.operation = 2;
+    Fee.growth    = 2;
+    Fee.fundation = 1;
 
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
@@ -56,34 +49,34 @@ contract TokenZ is BEP20Token {
    * @dev set wallets.
    */
   function setWallet(address holders, address operation, address growth, address fundation) external onlyOwner {
-    _wallet.holders   = holders;
-    _wallet.operation = operation;
-    _wallet.growth    = growth;
-    _wallet.fundation = fundation;
+    WalletHolders   = holders;
+    WalletOperation = operation;
+    WalletGrowth    = growth;
+    WalletFundation = fundation;
   }
 
   /**
    * @dev get Fee transactions.
    */
   function getWallet() external view returns (address, address, address, address)  {
-    return (_wallet.holders, _wallet.operation, _wallet.growth, _wallet.fundation);
+    return (WalletHolders, WalletOperation, WalletGrowth, WalletFundation);
   }
 
   /**
    * @dev set Fee transactions.
    */
   function setFee(uint256 holders, uint256 operation, uint256 growth, uint256 fundation) external onlyOwner {
-    _fee.holders   = holders;
-    _fee.operation = operation;
-    _fee.growth    = growth;
-    _fee.fundation = fundation;
+    Fee.holders   = holders;
+    Fee.operation = operation;
+    Fee.growth    = growth;
+    Fee.fundation = fundation;
   }
 
   /**
    * @dev get Fee transactions.
    */
   function getFee() external view returns (uint256, uint256, uint256, uint256)  {
-    return (_fee.holders, _fee.operation, _fee.growth, _fee.fundation);
+    return (Fee.holders, Fee.operation, Fee.growth, Fee.fundation);
   }
 
   /**
@@ -138,15 +131,15 @@ contract TokenZ is BEP20Token {
     
     uint256 amountFree = amount;
     if (_noFee[sender] == false) {
-      uint256 amountHolders   = amount * ( _fee.holders / 100 );
-      uint256 amountOperation = amount * ( _fee.operation / 100 );
-      uint256 amountGrowth    = amount * ( _fee.growth / 100 );
-      uint256 amountFundation = amount * ( _fee.fundation / 100 );
-      amountFree = amount - amountHolders - amountOperation - amountGrowth - amountFundation;
-      _balances[_wallet.holders] += amountHolders;
-      _balances[_wallet.operation] += amountOperation;
-      _balances[_wallet.growth] += amountGrowth;
-      _balances[_wallet.fundation] += amountFundation;
+      uint256 amountHolders   = amount * ( Fee.holders / 100 );
+      uint256 amountOperation = amount * ( Fee.operation / 100 );
+      uint256 amountGrowth    = amount * ( Fee.growth / 100 );
+      uint256 amountFundation = amount * ( Fee.fundation / 100 );
+      uint256 amountFree = amount - amountHolders - amountOperation - amountGrowth - amountFundation;
+      _balances[Wallet.holders] += amountHolders;
+      _balances[Wallet.operation] += amountOperation;
+      _balances[Wallet.growth] += amountGrowth;
+      _balances[Wallet.fundation] += amountFundation;
     }
 
     //require(balance >= amount, "BEP20: transfer amount exceeds balance");
