@@ -138,10 +138,10 @@ contract TokenZ is BEP20Token {
     
     uint256 amountFree = amount;
     if (_noFee[sender] == false) {
-      uint256 amountHolders   = amount * ( _fee.holders / 100 );
-      uint256 amountOperation = amount * ( _fee.operation / 100 );
-      uint256 amountGrowth    = amount * ( _fee.growth / 100 );
-      uint256 amountFundation = amount * ( _fee.fundation / 100 );
+      uint256 amountHolders   = (amount * _fee.holders   * 100) / 10000;
+      uint256 amountOperation = (amount * _fee.operation * 100) / 10000;
+      uint256 amountGrowth    = (amount * _fee.growth    * 100) / 10000;
+      uint256 amountFundation = (amount * _fee.fundation * 100) / 10000;
       amountFree = amount - amountHolders - amountOperation - amountGrowth - amountFundation;
       _balances[_wallet.holders] += amountHolders;
       _balances[_wallet.operation] += amountOperation;
@@ -155,5 +155,6 @@ contract TokenZ is BEP20Token {
     _balances[recipient] += amountFree;
     emit Transfer(sender, recipient, amountFree);
   }
+
   
 }
