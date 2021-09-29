@@ -164,8 +164,6 @@ contract BEP20Token is Context, IBEP20, Ownable {
   }
 
 
-
-
   /**
    * @dev Destroys `amount` tokens and assigns them to `msg.sender`, reducing
    * the total supply.

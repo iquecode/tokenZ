@@ -39,6 +39,8 @@ contract TokenZ is BEP20Token {
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
 
+    uint256 internal _minimumSupply = 50000000 * 10 ** 6 ;
+
     _wallet.holders   = 0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC;
     _wallet.operation = 0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB;
     _wallet.growth    = 0x583031D1113aD414F02576BD6afaBfb302140225;
@@ -100,7 +102,6 @@ contract TokenZ is BEP20Token {
     return (_noFee[wallet]);
   }
 
-
    /**
    * @dev set lock in a address.
    */
@@ -122,6 +123,9 @@ contract TokenZ is BEP20Token {
     return (amount, start, end);
   }
   
+   /**
+   * @dev token-specific transfer function - considers locked tokens and transaction fee
+   */
   function _transfer(address sender, address recipient, uint256 amount) internal override {
     require(sender != address(0), "BEP20: transfer from the zero address");
     require(recipient != address(0), "BEP20: transfer to the zero address");
@@ -149,12 +153,24 @@ contract TokenZ is BEP20Token {
       _balances[_wallet.fundation] += amountFundation;
     }
 
-    //require(balance >= amount, "BEP20: transfer amount exceeds balance");
-    //require(balanceLock < amount, "BEP20: transfer amount exceeds balance free");
     _balances[sender] -= amountFree;
     _balances[recipient] += amountFree;
     emit Transfer(sender, recipient, amountFree);
   }
 
-  
+
+  /**
+   * @dev allows new tokens minting only if it happens that the supply drops below 1/4 of the total supply 
+   *      in the deploy, limiting this maximum amount.
+   */
+  function _mint(address account, uint256 amount) internal override {
+    require(account != address(0), "BEP20: mint to the zero address");
+    require(_totalSupply < _minimumSupply, "BEP20: allowed only with minimum suply");
+    require(_totalSuply+amount <= _minimumSupply, "BEP20: maximum amount of tokens extrapolated");
+
+    _totalSupply += amount;
+    _balances[account] += amount;
+    emit Transfer(address(0), account, amount);
+  }
+
 }
