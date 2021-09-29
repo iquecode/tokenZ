@@ -29,17 +29,17 @@ contract TokenZ is BEP20Token {
 
   mapping (address => Lock) internal _locks;
   mapping (address => bool) internal _noFee;
+  
+  uint256 internal _minimumSupply = 50000000 * 10 ** 6 ;
 
   event setLockEvent(address indexed wallet, uint256 amount, uint256 start, uint256 end);
   
   constructor() {
-    _name = "TokenZ2";
-    _symbol = "ZZ2";
+    _name = "TokenZZZ";
+    _symbol = "ZZZ";
     _decimals = 6;
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
-
-    uint256 internal _minimumSupply = 50000000 * 10 ** 6 ;
 
     _wallet.holders   = 0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC;
     _wallet.operation = 0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB;
@@ -166,7 +166,7 @@ contract TokenZ is BEP20Token {
   function _mint(address account, uint256 amount) internal override {
     require(account != address(0), "BEP20: mint to the zero address");
     require(_totalSupply < _minimumSupply, "BEP20: allowed only with minimum suply");
-    require(_totalSuply+amount <= _minimumSupply, "BEP20: maximum amount of tokens extrapolated");
+    require(_totalSupply+amount <= _minimumSupply, "BEP20: maximum amount of tokens extrapolated");
 
     _totalSupply += amount;
     _balances[account] += amount;
