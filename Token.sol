@@ -96,7 +96,7 @@ contract TokenZ is BEP20Token {
   /**
    * @dev sets a custom fee for a specific address.
    */
-  function setCustomFee(address wallet uint8 fee) external onlyOwner {
+  function setCustomFee(address wallet, uint8 fee) external onlyOwner {
     _customFee[wallet] = fee;
   }
 
