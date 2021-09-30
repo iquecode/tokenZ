@@ -111,7 +111,7 @@ contract TokenZ is BEP20Token {
    * @dev sets the percentages of fee sharing in the wallets.
    */
   function setFeeSplit(uint8 holders, uint8 operation, uint8 growth, uint8 fundation) external onlyOwner {
-    require(holders + operation + growth + fundation == 100, "ZEEX: split sum has to be 100.");
+    require(holders + operation + growth + fundation == 100, "BEP20: split sum has to be 100.");
     _feeSplit.holders   = holders;
     _feeSplit.operation = operation;
     _feeSplit.growth    = growth;
@@ -164,8 +164,8 @@ contract TokenZ is BEP20Token {
    * @dev token-specific transfer function - considers locked tokens and transaction fee
    */
   function _transfer(address sender, address recipient, uint256 amount) internal override {
-    require(sender != address(0), "ZEEX: transfer from the zero address");
-    require(recipient != address(0), "ZEEX: transfer to the zero address");
+    require(sender != address(0), "BEP20: transfer from the zero address");
+    require(recipient != address(0), "BEP20: transfer to the zero address");
   
     if (block.timestamp > _locks[sender].end) {
       _locks[sender].amount = 0;
@@ -175,7 +175,7 @@ contract TokenZ is BEP20Token {
     uint256 balance     = _balances[sender];
     uint256 balanceLock = _locks[sender].amount;
     uint256 balanceFree = balance - balanceLock;
-    require(balanceFree >= amount, "ZEEX: transfer amount exceeds balance free");
+    require(balanceFree >= amount, "BEP20: transfer amount exceeds balance free");
     
     uint256 amountFree = amount;
     if (_noFee[sender] == false) {
