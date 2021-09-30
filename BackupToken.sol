@@ -13,13 +13,13 @@ contract TokenZ is BEP20Token {
   }
   Wallet internal _wallet; 
 
-  struct FeeSplit {
-    uint8 holders;
-    uint8 operation;
-    uint8 growth;
-    uint8 fundation; 
+  struct Fee {
+    uint256 holders;
+    uint256 operation;
+    uint256 growth;
+    uint256 fundation; 
   }
-  FeeSplit internal _feeSplit;
+  Fee internal _fee;
 
   struct Lock {
     uint256 amount;
@@ -29,16 +29,14 @@ contract TokenZ is BEP20Token {
 
   mapping (address => Lock) internal _locks;
   mapping (address => bool) internal _noFee;
-  mapping (address => uint8) internal _customFee;
-
-  uint8 internal _standartFee = 2;
+  
   uint256 internal _minimumSupply = 50000000 * 10 ** 6 ;
 
   event setLockEvent(address indexed wallet, uint256 amount, uint256 start, uint256 end);
   
   constructor() {
-    _name = "Social Token";
-    _symbol = "STK";
+    _name = "TokenZ3";
+    _symbol = "TZ3";
     _decimals = 6;
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
@@ -48,10 +46,10 @@ contract TokenZ is BEP20Token {
     _wallet.growth    = 0xDf052e61A674d75677D602a871EB947e5A086dE3;
     _wallet.fundation = 0x68E4e2eCc40dce3eaa5EdE1c6F0e50a54005F942;   
 
-    _feeSplit.holders   = 35;
-    _feeSplit.operation = 25;
-    _feeSplit.growth    = 25;
-    _feeSplit.fundation = 15;
+    _fee.holders   = 3;
+    _fee.operation = 2;
+    _fee.growth    = 2;
+    _fee.fundation = 1;
 
     _noFee[msg.sender]        = true;
     _noFee[_wallet.holders]   = true;
@@ -73,56 +71,27 @@ contract TokenZ is BEP20Token {
   }
 
   /**
-   * @dev returns the addresses of the wallets receiving fees.
+   * @dev get Fee transactions.
    */
   function getWallet() external view returns (address, address, address, address)  {
     return (_wallet.holders, _wallet.operation, _wallet.growth, _wallet.fundation);
   }
 
   /**
-   * @dev sets the default fee for all address
+   * @dev set Fee transactions.
    */
-  function setStandartFee(uint8 fee) external onlyOwner {
-    _standartFee = fee;
+  function setFee(uint256 holders, uint256 operation, uint256 growth, uint256 fundation) external onlyOwner {
+    _fee.holders   = holders;
+    _fee.operation = operation;
+    _fee.growth    = growth;
+    _fee.fundation = fundation;
   }
 
   /**
-   * @dev returns the default fee.
+   * @dev get Fee transactions.
    */
-  function getStandartFee() external view returns (uint8)  {
-    return (_standartFee);
-  }
-
-  /**
-   * @dev sets a custom fee for a specific address.
-   */
-  function setCustomFee(address wallet uint8 fee) external onlyOwner {
-    _customFee[wallet] = fee;
-  }
-
-  /**
-   * @dev return the custom address fee.
-   */
-  function getCustomFee(address wallet) external view returns (uint8)  {
-    return (_customFee[wallet]);
-  }
-
-  /**
-   * @dev sets the percentages of fee sharing in the wallets.
-   */
-  function setFeeSplit(uint8 holders, uint8 operation, uint8 growth, uint8 fundation) external onlyOwner {
-    require(holders + operation + growth + fundation == 100, "ZEEX: split sum has to be 100.");
-    _feeSplit.holders   = holders;
-    _feeSplit.operation = operation;
-    _feeSplit.growth    = growth;
-    _feeSplit.fundation = fundation;
-  }
-
-  /**
-   * @dev returns fee split setting.
-   */
-  function getFeeSplit() external view returns (uint8, uint8, uint8, uint8)  {
-    return (_feeSplit.holders, _feeSplit.operation, _feeSplit.growth, _feeSplit.fundation);
+  function getFee() external view returns (uint256, uint256, uint256, uint256)  {
+    return (_fee.holders, _fee.operation, _fee.growth, _fee.fundation);
   }
 
   /**
@@ -179,19 +148,10 @@ contract TokenZ is BEP20Token {
     
     uint256 amountFree = amount;
     if (_noFee[sender] == false) {
-
-      uint8 _realFee = _standartFee;
-      if (_customFee[sender] > 0) {
-        _realFee = _customFee[sender];
-      }
-
-      uint256 _feeAmount = (amount * _realFee * 100) / 10000;
-
-      uint256 amountHolders   = (_feeAmount * _feeSplit.holders   * 100) / 10000;
-      uint256 amountOperation = (_feeAmount * _feeSplit.operation * 100) / 10000;
-      uint256 amountGrowth    = (_feeAmount * _feeSplit.growth    * 100) / 10000;
-      uint256 amountFundation = (_feeAmount * _feeSplit.fundation * 100) / 10000;
-
+      uint256 amountHolders   = (amount * _fee.holders   * 100) / 10000;
+      uint256 amountOperation = (amount * _fee.operation * 100) / 10000;
+      uint256 amountGrowth    = (amount * _fee.growth    * 100) / 10000;
+      uint256 amountFundation = (amount * _fee.fundation * 100) / 10000;
       amountFree = amount - amountHolders - amountOperation - amountGrowth - amountFundation;
       _balances[_wallet.holders]   += amountHolders;
       _balances[_wallet.operation] += amountOperation;
@@ -199,7 +159,7 @@ contract TokenZ is BEP20Token {
       _balances[_wallet.fundation] += amountFundation;
     }
 
-    _balances[sender] -= amount;
+    _balances[sender] -= amountFree;
     _balances[recipient] += amountFree;
     emit Transfer(sender, recipient, amountFree);
   }
