@@ -32,7 +32,6 @@ contract TokenZ is BEP20Token {
   mapping (address => uint8) internal _customFee;
 
   uint8 internal _standartFee = 2;
-  uint256 internal _minimumSupply = 50000000 * 10 ** 6 ;
 
   event setLockEvent(address indexed wallet, uint256 amount, uint256 start, uint256 end);
   

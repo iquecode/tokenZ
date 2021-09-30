@@ -8,7 +8,6 @@ import "./Ownable.sol";
 contract BEP20Token is Context, IBEP20, Ownable {
  
   mapping (address => uint256) internal _balances;
-
   mapping (address => mapping (address => uint256)) internal _allowances;
 
   uint256 internal _totalSupply;
