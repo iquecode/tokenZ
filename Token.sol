@@ -5,7 +5,7 @@ The Artzeex Ecosystem is a project focused on revolutionizing the art world by a
 and the metaverse. For more information visit the link bellow:
 https://artzeex.com/
 
-200,000 Total Supply
+200,000,000 Total Supply
 
 Name: Artzeex
 Symbol: ZEEX
