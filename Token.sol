@@ -1,9 +1,23 @@
+// Submitted for verification at BscScan.com on 2021-10-01
+
+/*
+The Artzeex Ecosystem is a project focused on revolutionizing the art world by adding value to the world of NFT's 
+and the metaverse. For more information visit the link bellow:
+https://artzeex.com/
+
+200,000 Total Supply
+
+Name: Artzeex
+Symbol: ZEEX
+Decimals: 6
+*/
+
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.2;
 
 import "./BEP20Token.sol";
 
-contract TokenZ is BEP20Token {
+contract Zeex is BEP20Token {
 
   struct Wallet {
     address holders;
@@ -36,16 +50,16 @@ contract TokenZ is BEP20Token {
   event setLockEvent(address indexed wallet, uint256 amount, uint256 start, uint256 end);
   
   constructor() {
-    _name = "Social Token";
-    _symbol = "STK";
+    _name = "Artzeex";
+    _symbol = "ZEEX";
     _decimals = 6;
     _totalSupply = 200000000 * 10 ** 6;
     _balances[msg.sender] = _totalSupply;
 
-    _wallet.holders   = 0xA75b3ad1550ae0D1e0416D59a2Da7022C8DF21A7;
-    _wallet.operation = 0xc95FeBe584157FC99C29bB13E9c2ff5cD480D2be;
-    _wallet.growth    = 0xDf052e61A674d75677D602a871EB947e5A086dE3;
-    _wallet.fundation = 0x68E4e2eCc40dce3eaa5EdE1c6F0e50a54005F942;   
+    _wallet.holders   = 0xD73818D26d12dDa5eB449F419bF565700e0B5e01;
+    _wallet.operation = 0x72D226c98538815b5Eaf14B79D98F12C5051AF5d;
+    _wallet.growth    = 0x45A0b7eB0d29bE41f48fA76d6DE12EA890eA36F7;
+    _wallet.fundation = 0x0d4a003C1f98E736814a96b76804c74311994b08;   
 
     _feeSplit.holders   = 35;
     _feeSplit.operation = 25;
